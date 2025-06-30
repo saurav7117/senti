@@ -1,0 +1,24 @@
+from flask import Flask, request
+from textblob import TextBlob
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return '''
+    <h2>Sentiment Analysis</h2>
+    <form action="/analyze" method="post">
+        <input name="text" placeholder="Enter your text" style="width: 300px;">
+        <button type="submit">Analyze</button>
+    </form>
+    '''
+
+@app.route('/analyze', methods=['POST'])
+def analyze():
+    text = request.form['text']
+    blob = TextBlob(text)
+    sentiment = blob.sentiment.polarity
+    return f'<h3>Sentiment Score: {sentiment}</h3>'
+
+if __name__ == '__main__':
+    app.run(debug=True)
